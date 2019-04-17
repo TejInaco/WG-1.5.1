@@ -77,18 +77,11 @@ public class State implements Cloneable {
 
 
 
-
-
-    /* returns the value of each state for minimax to min/max over at
-    zero depth. Right now it's pretty trivial, looking for only goal states.
-    (This would be perfect for infinite depth minimax. Not so great for d=2) */
-
-
     /**
      * Game won  || numero de linhas, colunas ou diagonais com 4 peças semelhantes isto é UMA porque o jogo está ganho
      * Checks rows/columns and diagonals
      */
-    public boolean nlinhas4(char agent) {
+    public boolean isGoal(char agent) {
 
         String find = "" + agent + "" + agent + "" + agent + "" + agent;
 
@@ -152,6 +145,10 @@ public class State implements Cloneable {
         return false;
     }
 
+    public int central(char agent){
+        //Atribui a cada peca do jogador na casas centrais
+    return 0;
+    }
 
     public int nlinhas3(char agent) {
 
@@ -403,15 +400,15 @@ public class State implements Cloneable {
    // O-2
     public double evaluationFunction() {
         //heuristicas
-        //        int agente1 = nlinhas4('X') - nlinhas4('O');
+        //        int agente1 = isGoal('X') - isGoal('O');
 //        int agente2 = 100*agente1 +nlinhas3('X');
 //        int agente3 = 100*agente1 +central('X') - central('O');
 //        int agente4 = 5*agente2 - agente3;
 
 
-        if (this.nlinhas4('O'))
+        if (this.isGoal('O'))
             return 1000.0;
-        if (this.nlinhas4('X'))
+        if (this.isGoal('X'))
             return -1000.0;
 
         return 1.0;
