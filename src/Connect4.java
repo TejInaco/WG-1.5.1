@@ -39,24 +39,24 @@ public class Connect4 {
 
 //            continuePlay();
 //FOR user input
-            Scanner in = new Scanner(System.in);
-            int mymove = in.nextInt();
-            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', mymove);
+//            Scanner in = new Scanner(System.in);
+//            int mymove = in.nextInt();
+//            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', mymove);
 
             //Codigo para o agente 2
-//            int action2 = agent_2_0.getAction(estado_tabuleiro);
-//            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', action);
+            int action2 = agent_2_0.getAction(estado_tabuleiro);
+            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', action2);
             estado_tabuleiro.printBoard();
 
             //teste prints - BEGIN
             estado_tabuleiro.nlinhas3('O');
-            estado_tabuleiro.nlinhas2('O');
+       //     estado_tabuleiro.nlinhas2('O');
             //teste prints - END
 
             //teste prints -BEGIN
             System.out.println( "Player 1" );
             estado_tabuleiro.nlinhas3('X');
-            estado_tabuleiro.nlinhas2('X');
+     //       estado_tabuleiro.nlinhas2('X');
             //teste prints -END
 
 

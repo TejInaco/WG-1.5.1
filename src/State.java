@@ -51,6 +51,20 @@ public class State implements Cloneable {
     return actions;
   }
 
+    // X-1
+    // O-2
+    public double evaluationFunction() {
+        // heuristicas
+        int agente1 = nlinhas4('X') - nlinhas4('O');
+        int agente2 = 100*agente1 +nlinhas3('X');
+        int agente3 = 100*agente1 +central('X') - central('O');
+        int agente4 = 5*agente2 - agente3;
+
+        if (this.isGoal('O')) return 1000.0;
+        if (this.isGoal('X')) return -1000.0;
+
+        return 1.0;
+    }
   /* returns a State object that is obtained by the agent (parameter)
   performing an action (parameter) on the current state */
   /**
@@ -70,17 +84,6 @@ public class State implements Cloneable {
     return new_state;
   }
 
-  /* Print's the current state's board in a nice pretty way */
-  public void printBoard() {
-    System.out.println(new String(new char[this.cols * 2]).replace('\0', '-'));
-    for (int i = 0; i < this.rows; i++) {
-      for (int j = 0; j < this.cols; j++) {
-        System.out.print(this.board[i][j] + " ");
-      }
-      System.out.println();
-    }
-    System.out.println(new String(new char[this.cols * 2]).replace('\0', '-'));
-  }
 
   /**
    * Game won || numero de linhas, colunas ou diagonais com 4 peças semelhantes isto é UMA porque o
@@ -141,10 +144,95 @@ public class State implements Cloneable {
     return false;
   }
 
-  public int central(char agent) {
-    // Atribui a cada peca do jogador na casas centrais
-    return 0;
-  }
+    public int central(char agent) {
+
+        // Atribui a cada peca do jogador na casas centrais
+        int val = 0;
+        for (int i = 0; i < Macros.ROW; i++)
+            for (int j = 0; j < Macros.COL; j++)
+                if (this.board[i][j] == agent)
+                    if (j == 3) val += 2;
+                    else if (j == 2 || j == 4) val++;
+        return val;
+    }
+
+  public int nlinhas4(char agent) {
+
+        String findRigth = "" + agent + "" + agent + "" + agent + "."; // 000.
+
+        int counter = 0;
+
+        // check rows
+        for (int i = 0; i < this.rows; i++) {
+            if (String.valueOf(this.board[i]).contains(findRigth)) {
+                counter++;
+            }
+        }
+
+        int middleCounter = counter;
+        // check cols
+        for (int j = 0; j < this.cols; j++) {
+            String col = "";
+            for (int i = 0; i < this.rows; i++) col += this.board[i][j];
+
+            if (col.contains(findRigth)) counter++;
+            }
+
+        int mmCounter = counter;
+        // check diagonals
+        ArrayList<Point> pos_right = new ArrayList<Point>();
+        ArrayList<Point> pos_left = new ArrayList<Point>();
+
+        for (int j = 0; j < this.cols - 4 + 1; j++) pos_right.add(new Point(0, j));
+        for (int j = 4 - 1; j < this.cols; j++) pos_left.add(new Point(0, j));
+        for (int i = 1; i < this.rows - 4 + 1; i++) {
+            pos_right.add(new Point(i, 0));
+            pos_left.add(new Point(i, this.cols - 1));
+        }
+
+        // check right diagonals
+        for (Point p : pos_right) {
+            String d = "";
+            int x = p.x, y = p.y;
+
+            while (true) {
+                try {
+                    if (x >= this.rows || y >= this.cols) break;
+                    d += this.board[x][y];
+                    x += 1;
+                    y += 1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (d.contains(findRigth)) {
+                counter++;
+            }
+
+        }
+
+        // check left diagonals
+        for (Point p : pos_left) {
+            String d = "";
+            int x = p.x, y = p.y;
+            while (true) {
+                try {
+                    if (y < 0 || x >= this.rows || y >= this.cols) break;
+                    d += this.board[x][y];
+                    x += 1;
+                    y -= 1;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (d.contains(findRigth)) {
+                counter++;
+            }
+
+        }
+        return counter;
+    }
+
 
   public int nlinhas3(char agent) {
 
@@ -157,33 +245,17 @@ public class State implements Cloneable {
 
     // check rows
     for (int i = 0; i < this.rows; i++) {
-      if (String.valueOf(this.board[i]).contains(findRigth)) {
-        counter++;
-      }
-      if (String.valueOf(this.board[i]).contains(findLeft)) {
-        counter++;
-      }
-      if (String.valueOf(this.board[i]).contains(findLeftCenter)) {
-        counter++;
-      }
-      if (String.valueOf(this.board[i]).contains(findRightCenter)) {
-        counter++;
-      }
+        counter = getCounter(findRigth, findLeft, findRightCenter, findLeftCenter, counter, String.valueOf(this.board[i]));
     }
 
-    System.out.println("For das linhas: " + counter);
     int middleCounter = counter;
     // check cols
     for (int j = 0; j < this.cols; j++) {
       String col = "";
       for (int i = 0; i < this.rows; i++) col += this.board[i][j];
 
-      if (col.contains(findRigth)) counter++;
-      if (col.contains(findLeft)) counter++;
-      if (col.contains(findLeftCenter)) counter++;
-      if (col.contains(findLeftCenter)) counter++;
+        counter = getCounter(findRigth, findLeft, findLeftCenter, findLeftCenter, counter, col);
     }
-    System.out.println("For colunas: " + (counter - middleCounter));
 
     int mmCounter = counter;
     // check diagonals
@@ -212,18 +284,7 @@ public class State implements Cloneable {
           e.printStackTrace();
         }
       }
-      if (d.contains(findRigth)) {
-        counter++;
-      }
-      if (d.contains(findLeft)) {
-        counter++;
-      }
-      if (d.contains(findRightCenter)) {
-        counter++;
-      }
-      if (d.contains(findLeftCenter)) {
-        counter++;
-      }
+        counter = getCounter(findRigth, findLeft, findLeftCenter, findRightCenter, counter, d);
     }
 
     // check left diagonals
@@ -240,20 +301,8 @@ public class State implements Cloneable {
           e.printStackTrace();
         }
       }
-      if (d.contains(findRigth)) {
-        counter++;
-      }
-      if (d.contains(findLeft)) {
-        counter++;
-      }
-      if (d.contains(findRightCenter)) {
-        counter++;
-      }
-      if (d.contains(findLeftCenter)) {
-        counter++;
-      }
+        counter = getCounter(findRigth, findLeft, findLeftCenter, findRightCenter, counter, d);
     }
-    System.out.println("total counter: " + (counter - mmCounter - middleCounter));
 
     return counter;
   }
@@ -268,33 +317,17 @@ public class State implements Cloneable {
     int counter = 0;
     // check rows
     for (int i = 0; i < this.rows; i++) {
-      if (String.valueOf(this.board[i]).contains(findRigth)) {
-        counter++;
-      }
-      if (String.valueOf(this.board[i]).contains(findLeft)) {
-        counter++;
-      }
-      if (String.valueOf(this.board[i]).contains(findLeftCenter)) {
-        counter++;
-      }
-      if (String.valueOf(this.board[i]).contains(findRightCenter)) {
-        counter++;
-      }
+        counter = getCounter(findRigth, findLeft, findRightCenter, findLeftCenter, counter, String.valueOf(this.board[i]));
     }
 
-    System.out.println("For das linhas 2: " + counter);
     int middleCounter = counter;
     // check cols
     for (int j = 0; j < this.cols; j++) {
       String col = "";
       for (int i = 0; i < this.rows; i++) col += this.board[i][j];
 
-      if (col.contains(findRigth)) counter++;
-      if (col.contains(findLeft)) counter++;
-      if (col.contains(findLeftCenter)) counter++;
-      if (col.contains(findLeftCenter)) counter++;
+        counter = getCounter(findRigth, findLeft, findLeftCenter, findLeftCenter, counter, col);
     }
-    System.out.println("For colunas 2: " + (counter - middleCounter));
 
     int mmCounter = counter;
     // check diagonals
@@ -323,18 +356,7 @@ public class State implements Cloneable {
           e.printStackTrace();
         }
       }
-      if (d.contains(findRigth)) {
-        counter++;
-      }
-      if (d.contains(findLeft)) {
-        counter++;
-      }
-      if (d.contains(findRightCenter)) {
-        counter++;
-      }
-      if (d.contains(findLeftCenter)) {
-        counter++;
-      }
+        counter = getCounter(findRigth, findLeft, findLeftCenter, findRightCenter, counter, d);
     }
 
     // check left diagonals
@@ -351,36 +373,40 @@ public class State implements Cloneable {
           e.printStackTrace();
         }
       }
-      if (d.contains(findRigth)) {
-        counter++;
-      }
-      if (d.contains(findLeft)) {
-        counter++;
-      }
-      if (d.contains(findRightCenter)) {
-        counter++;
-      }
-      if (d.contains(findLeftCenter)) {
-        counter++;
-      }
+        counter = getCounter(findRigth, findLeft, findLeftCenter, findRightCenter, counter, d);
     }
-    System.out.println("total counter 2: " + (counter - mmCounter - middleCounter));
 
     return counter;
   }
 
-  // X-1
-  // O-2
-  public double evaluationFunction() {
-    // heuristicas
-    //        int agente1 = isGoal('X') - isGoal('O');
-    //        int agente2 = 100*agente1 +nlinhas3('X');
-    //        int agente3 = 100*agente1 +central('X') - central('O');
-    //        int agente4 = 5*agente2 - agente3;
+    private int getCounter(String findRigth, String findLeft, String findLeftCenter, String findRightCenter, int counter, String d) {
+        if (d.contains(findRigth)) {
+            counter++;
+        }
+        if (d.contains(findLeft)) {
+            counter++;
+        }
+        if (d.contains(findRightCenter)) {
+            counter++;
+        }
+        if (d.contains(findLeftCenter)) {
+            counter++;
+        }
+        return counter;
+    }
 
-    if (this.isGoal('O')) return 1000.0;
-    if (this.isGoal('X')) return -1000.0;
 
-    return 1.0;
-  }
+
+    /* Print's the current state's board in a nice pretty way */
+    public void printBoard() {
+        System.out.println(new String(new char[this.cols * 2]).replace('\0', '-'));
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.cols; j++) {
+                System.out.print(this.board[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println(new String(new char[this.cols * 2]).replace('\0', '-'));
+    }
+
 }
