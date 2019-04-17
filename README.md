@@ -1,3 +1,4 @@
+
 # Minimax-Connect-4
 
 This is a simple implementation of the mini-max AI algorithm in the form of a 2 player(1v1) game called connect-4 (https://en.wikipedia.org/wiki/Connect_Four).
