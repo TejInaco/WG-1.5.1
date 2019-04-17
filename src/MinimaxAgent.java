@@ -39,7 +39,8 @@ public class MinimaxAgent {
     public double max_value(State st, int d) throws CloneNotSupportedException {
         ArrayList<Integer> children = new ArrayList<Integer>();
         if (d == 0){
-            System.out.println("Hello");
+//            System.out.println("Hello");1
+
             return st.evaluationFunction();
 
         }else{
