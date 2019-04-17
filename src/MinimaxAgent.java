@@ -11,6 +11,13 @@ public class MinimaxAgent {
         this.depth = depth;
     }
 
+
+    /**
+     * public static State minimaxDecision(State state) {
+     *        return state.getActions().stream()
+     *                 .max(Comparator.comparing(MinimaxTemplate::minValue)).get();
+     *     }
+     * */
     public int getAction(State st) throws CloneNotSupportedException
     {
         double val = max_value(st, depth);
@@ -19,6 +26,16 @@ public class MinimaxAgent {
 
     }
 
+    /**
+     * private static double maxValue(State state) {
+     *             if(state.isTerminal()){
+     *                 return state.getUtility();
+     *             }
+     *             return state.getActions().stream()
+     *                     .map(MinimaxTemplate::minValue)
+     *                     .max(Comparator.comparing(Double::valueOf)).get();
+     *         }
+     * */
     public double max_value(State st, int d) throws CloneNotSupportedException {
         ArrayList<Integer> children = new ArrayList<Integer>();
         if (d == 0){
@@ -45,6 +62,16 @@ public class MinimaxAgent {
         }
     }
 
+    /**
+     * private static double minValue(State state) {
+     *             if(state.isTerminal()){
+     *                 return state.getUtility();
+     *             }
+     *             return state.getActions().stream()
+     *                     .map(MinimaxTemplate::maxValue)
+     *                     .min(Comparator.comparing(Double::valueOf)).get();
+     *         }
+     * */
     public double min_value(State st, int d) throws CloneNotSupportedException
     {
 

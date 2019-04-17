@@ -3,43 +3,72 @@ package src;
 import java.util.Scanner;
 
 public class Connect4 {
-    public static void main(String[] args) throws CloneNotSupportedException{
 
-        System.out.println("Enter the depth:");
-        Scanner in = new Scanner(System.in);
 
-        //Leitura do terminal
-        int depth = in.nextInt();
-        if( depth >= 0  && depth <= 7  ){
-            System.out.println("Jogada Valida");
-        }
+    public static void main(String[] args) throws CloneNotSupportedException {
+        int depth_player1 = 0;
+        int depth_player2 = 0;
 
-        MinimaxAgent mma = new MinimaxAgent(depth);
-        State estado_tabuleiro=new State(6,7);
+        do {
+            System.out.println("Enter the depth for agent 1 [1-oo]:");
+            Scanner in = new Scanner(System.in);
+            //Leitura do terminal
+            depth_player1 = in.nextInt();
 
-        while(true){
-            int action = mma.getAction(estado_tabuleiro);
-            //System.out.println("WOWOW");
+            Scanner in2 = new Scanner(System.in);
+            System.out.println("Enter the depth for agent 2 [1-oo]:");
+            depth_player2 = in2.nextInt();
+
+        } while (validateInputDepth(depth_player1, depth_player2));
+
+
+        MinimaxAgent agent_1_X = new MinimaxAgent(depth_player1);
+        MinimaxAgent agent_2_0 = new MinimaxAgent(depth_player2);
+
+        State estado_tabuleiro = new State(Macros.ROW, Macros.COL);
+
+        while (true) {
+            int action = agent_1_X.getAction(estado_tabuleiro);
             //jogada do minimax
-            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', action);
+            estado_tabuleiro = estado_tabuleiro.generateSuccessor('X', action);
             estado_tabuleiro.printBoard();
 
             //check if O won? for Agetn input
-            if(estado_tabuleiro.isGoal('O'))
+            if (estado_tabuleiro.nlinhas4('X'))
                 break;
 
-            //jogada do utilizador
-            int enemy_move = in.nextInt();
-            estado_tabuleiro = estado_tabuleiro.generateSuccessor('X', enemy_move);
+            continuePlay();
+
+            int action2 = agent_2_0.getAction(estado_tabuleiro);
+            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', action);
             estado_tabuleiro.printBoard();
 
             //check if X won? for user input
-            if(estado_tabuleiro.isGoal('X'))
+            if (estado_tabuleiro.nlinhas4('0'))
                 break;
             //pause
+            continuePlay();
         }
 
 
+    }
 
+    /**
+     * Validar inteiros recebidos no terminal
+     */
+    static boolean validateInputDepth(int depth_um, int depth_dois) {
+        if (depth_um > 0 && depth_dois > 0) {
+            return false;
+        }
+        System.out.println(" -- Repeat Input Values -- ");
+        return true;
+    }
+
+    static void continuePlay() {
+        System.out.println(" -- Enter 1 to continue - 0 to exit -- ");
+        Scanner in = new Scanner(System.in);
+        if (in.nextInt() == 0) {
+            System.exit(0);
+        }
     }
 }

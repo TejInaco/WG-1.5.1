@@ -45,7 +45,7 @@ public class State implements Cloneable {
     /* returns a list of actions that can be taken from the current state
     actions are integers representing the column where a coin can be dropped */
     public ArrayList<Integer> getLegalActions(){
-        ArrayList<Integer> actions=new ArrayList<Integer>();
+        ArrayList<Integer> actions = new ArrayList<Integer>();
         for(int j=0; j<this.cols; j++)
             if(this.board[0][j]=='.')
                 actions.add(j);
@@ -76,9 +76,11 @@ public class State implements Cloneable {
         System.out.println(new String(new char[this.cols*2]).replace('\0', '-'));
     }
 
-    /* returns True/False if the agent(parameter) has won the game
-    by checking all rows/columns/diagonals for a sequence of >=4 */
-    public boolean isGoal(char agent){
+    /**
+     * Game won
+     * Checks rows/columns and diagonals
+     * */
+    public boolean nlinhas4(char agent){
 
         String find=""+agent+""+agent+""+agent+""+agent;
 
@@ -97,7 +99,7 @@ public class State implements Cloneable {
                 return true;
         }
 
-        //check diags
+        //check diagonals
         ArrayList<Point> pos_right=new ArrayList<Point>();
         ArrayList<Point> pos_left=new ArrayList<Point>();
 
@@ -110,7 +112,7 @@ public class State implements Cloneable {
             pos_left.add(new Point(i,this.cols-1));
         }
 
-        //check right diags
+        //check right diagonals
         for (Point p : pos_right) {
             String d="";
             int x=p.x, y=p.y;
@@ -124,7 +126,7 @@ public class State implements Cloneable {
                 return true;
         }
 
-        //check left diags
+        //check left diagonals
         for (Point p : pos_left) {
             String d="";
             int x=p.x, y=p.y;
@@ -137,9 +139,7 @@ public class State implements Cloneable {
             if(d.contains(find))
                 return true;
         }
-
         return false;
-
     }
 
 
@@ -149,9 +149,9 @@ public class State implements Cloneable {
     (This would be perfect for infinite depth minimax. Not so great for d=2) */
     public double evaluationFunction(){
 
-        if (this.isGoal('O'))
+        if (this.nlinhas4('O'))
             return 1000.0;
-        if (this.isGoal('X'))
+        if (this.nlinhas4('X'))
             return -1000.0;
 
         return 1.0;
