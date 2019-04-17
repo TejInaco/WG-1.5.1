@@ -34,8 +34,9 @@ public class Connect4 {
             estado_tabuleiro.printBoard();
 
             //check if O won? for Agetn input
-            if (estado_tabuleiro.isGoal('X'))
-                break;
+            if (estado_tabuleiro.isGoal('X')){
+                System.out.println("X wins");
+                break;}
 
 //            continuePlay();
 //FOR user input
@@ -62,8 +63,9 @@ public class Connect4 {
 
 
             //check if X won? for user input
-            if (estado_tabuleiro.isGoal('O'))
-                break;
+            if (estado_tabuleiro.isGoal('O')){
+                System.out.println("O wins");
+                break;}
             //pause
             continuePlay();
         }
