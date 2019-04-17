@@ -28,7 +28,7 @@ public class Connect4 {
         State estado_tabuleiro = new State(Macros.ROW, Macros.COL);
 
         while (true) {
-            int action = agent_1_X.getAction(estado_tabuleiro);
+            int action = agent_1_X.getAction(estado_tabuleiro,'X');
             //jogada do minimax
             estado_tabuleiro = estado_tabuleiro.generateSuccessor('X', action);
             estado_tabuleiro.printBoard();
@@ -44,7 +44,7 @@ public class Connect4 {
 //            estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', mymove);
 
             //Codigo para o agente 2
-            int action2 = agent_2_0.getAction(estado_tabuleiro);
+            int action2 = agent_2_0.getAction(estado_tabuleiro,'O');
             estado_tabuleiro = estado_tabuleiro.generateSuccessor('O', action2);
             estado_tabuleiro.printBoard();
 

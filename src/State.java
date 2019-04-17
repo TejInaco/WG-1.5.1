@@ -60,10 +60,10 @@ public class State implements Cloneable {
         int agente3 = 100*agente1 +central('X') - central('O');
         int agente4 = 5*agente2 - agente3;
 
-        if (this.isGoal('O')) return 1000.0;
-        if (this.isGoal('X')) return -1000.0;
+        if (this.isGoal('O')) return 10000.0;
+        if (this.isGoal('X')) return -10000.0;
 
-        return 1.0;
+        return agente1;
     }
   /* returns a State object that is obtained by the agent (parameter)
   performing an action (parameter) on the current state */
