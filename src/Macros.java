@@ -1,4 +1,3 @@
-package src;
 
 public class Macros {
     static int ROW = 6;
